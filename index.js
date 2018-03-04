@@ -30,9 +30,9 @@ fileSelector.onchange = function () {
 function handleFile(file) {
     var reader = new FileReader()
     reader.onload = function (event) {
-        var text = event.target.result
-        var result = deduplicate(text)
-        download('result.patch', result)
+        var result = deduplicate(event.target.result)
+        var fileName = addPostfix(file.name, '_clean')
+        download(fileName, result)
     }
     reader.readAsText(file)
 }
@@ -74,6 +74,11 @@ function deduplicate(patch) {
     return result
 }
 
+/**
+ * Triggers file download
+ * @param {String} filename File name 
+ * @param {String} text File content
+ */
 function download(filename, text) {
     var element = document.createElement('a');
     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
@@ -85,4 +90,18 @@ function download(filename, text) {
     element.click();
 
     document.body.removeChild(element);
+}
+
+/**
+ * Adds postfix to the original file name
+ * @param {String} originalName Original file name
+ * @param {String} postfix Postfix to add
+ * @returns {String} Name with postfix
+ */
+function addPostfix(originalName, postfix) {
+    var dividerPosition = originalName.lastIndexOf('.')
+    var name = originalName.substring(0, dividerPosition)
+    var extension = originalName.substring(dividerPosition)
+
+    return name + postfix + extension
 }
