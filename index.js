@@ -28,6 +28,10 @@ fileSelector.onchange = function () {
 }
 
 function handleFile(file) {
+    if (!file.name.endsWith('.patch')) {
+        return
+    }
+
     var reader = new FileReader()
     reader.onload = function (event) {
         var result = deduplicate(event.target.result)
